@@ -1,22 +1,62 @@
-import { Component } from '@angular/core';
-import { DataService, Message } from '../services/data.service';
+import { Component, NgZone } from '@angular/core';
+import { Platform } from '@ionic/angular';
+import { BleClient, ScanResult } from '@capacitor-community/bluetooth-le';
+
 
 @Component({
-  selector: 'app-home',
-  templateUrl: 'home.page.html',
-  styleUrls: ['home.page.scss'],
+    selector: 'app-home',
+    templateUrl: 'home.page.html',
+    styleUrls: ['home.page.scss'],
 })
 export class HomePage {
-  constructor(private data: DataService) {}
+    devices: ScanResult[] = [];
+    scanRunning = false;
+    ble = BleClient;
 
-  refresh(ev) {
-    setTimeout(() => {
-      ev.detail.complete();
-    }, 3000);
-  }
+    constructor(
+        private ngZone: NgZone,
+        private platform: Platform,
+    ) {
+        this.platform.ready().then(async () => {
+            await BleClient.initialize();
+        });
+    }
 
-  getMessages(): Message[] {
-    return this.data.getMessages();
-  }
+    scan(event?) {
+        this.devices = [];
+        this.scanRunning = true;
+        this.ble.requestLEScan({
+            services: [],
+        }, this.onDeviceDiscovered.bind(this));
 
+        setTimeout(() => {
+            if (this.scanRunning) {
+                this.stopScan(event);
+            }
+        }, 7500);
+    }
+
+    async refresh(event) {
+        await this.stopScan(event);
+        await this.scan(event);
+    }
+
+    async stopScan(event?) {
+        // await this.ble.stopScan();
+        this.scanRunning = false;
+        event?.target.complete();
+    }
+
+    onDeviceDiscovered(result: ScanResult) {
+        const { device } = result;
+        console.log(result);
+        console.log('Discovered' + JSON.stringify(device, null, 2));
+        // console.log(this.bytesToString(device.advertising));
+        this.devices.push(result);
+        console.log(device);
+    }
+
+    bytesToString(buffer) {
+        return String.fromCharCode.apply(null, new Uint8Array(buffer));
+    }
 }

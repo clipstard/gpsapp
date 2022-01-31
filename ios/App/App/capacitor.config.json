@@ -1,0 +1,6 @@
+{
+	"appId": "com.example.gpsapp",
+	"appName": "gpsapp",
+	"webDir": "www",
+	"bundledWebRuntime": false
+}
