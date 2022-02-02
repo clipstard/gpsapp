@@ -1,0 +1,30 @@
+:host {
+    .spinner-lines {
+        height: 50px;
+        display: flex;
+        justify-content: center;
+        width: auto;
+        margin-top: 250px;
+
+        &.no-margin {
+            margin-top: unset;
+            height: 25px;
+        }
+    }
+
+    .my-col {
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    .my-img {
+        width: 160px;
+        height: 50px;
+    }
+
+    .footer-wrapper {
+        display: flex;
+        justify-content: center;
+        background-color: #3f5a6b;
+    }
+}

@@ -1,0 +1,11 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button [text]="'back'" defaultHref="/" (click)="close()"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+    <div class="my-div" *ngFor="let rawMessage of messages" [innerHTML]="rawMessage | nl2br"></div>
+</ion-content>
